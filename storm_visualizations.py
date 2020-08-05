@@ -2,7 +2,7 @@
 Author: Cristopher Masserini
 Date Created: 07/31/2020
 
-This project is designed to be a detailed dashboard of the history of Hurricanes in the Atlantic Basin.
+This project is designed to be a detailed dashboard of the history of severe storms in the Atlantic Basin.
 The data is provided by NOAA HURDAT2 (https://www.nhc.noaa.gov/data/hurdat/hurdat2-1851-2019-052520.txt)
 which has data from 1851 to 2019.
 
@@ -19,10 +19,6 @@ import plotly as ply
 
 
 # ---- Functionality ----
-def field_filter(df: pd.DataFrame, field: str, value: str):
-    df_new = df[df[field] == value]
-
-
 def world_plot(df: pd.DataFrame):
     data = dict(
         type='choropleth',
