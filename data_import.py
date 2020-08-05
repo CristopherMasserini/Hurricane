@@ -2,7 +2,7 @@
 Author: Cristopher Masserini
 Date Created: 07/29/2020
 
-This project is designed to be a detailed dashboard of the history of Hurricanes in the Atlantic Basin.
+This project is designed to be a detailed dashboard of the history of severe storms in the Atlantic Basin.
 The data is provided by NOAA HURDAT2 (https://www.nhc.noaa.gov/data/hurdat/hurdat2-1851-2019-052520.txt)
 which has data from 1851 to 2019.
 
@@ -18,6 +18,8 @@ import datetime as dt
 
 # ---- Scrapping ----
 """
+retrieve()
+
 This function retrieves the data from the NOAA website. It then cleans the data and puts it into two
 pandas data frames.
 
@@ -27,6 +29,8 @@ The second data frame is called storm_details. This includes the storm code, the
 the date and time of that measurement, latitude of that measurement, longitude of that measurement, 
 if that measurement was made for landfall (0 for no, 1 for yes), and finally the best_track_index 
 is the best track entry for that storm (1st index refers to first measurement).  
+
+Returns a tuple of the two data frames
 """
 
 
@@ -72,10 +76,10 @@ def retrieve() -> tuple:
                 date_time.append(dt.datetime.strptime(f"{date} {time}", "%Y%m%d %H%M"))
 
                 # Latitude of the storm of the best track entry
-                storm_lat.append(line_str[23:28].strip())
+                storm_lat.append(float(line_str[23:27].strip()))
 
                 # Longitude of the storm of the best track entry
-                storm_lon.append(line_str[30:36].strip())
+                storm_lon.append(-float(line_str[30:35].strip()))
 
                 # If the storm made landfall at the best track entry
                 land_str = line_str[16].strip()
@@ -98,7 +102,29 @@ def retrieve() -> tuple:
     return hurricane_basics, hurricane_details
 
 
+"""
+field_filter()
+
+Adds the ability to easily filter the data frames
+df is the data frame to filter, field is the field to be filtered on, 
+and value is the value the field should have
+
+Returns the filtered data frame
+"""
+
+
+def field_filter(df: pd.DataFrame, field: str, value: str) -> pd.DataFrame:
+    return df[df[field] == value]
+
+
 if __name__ == "__main__":
     basics, details = retrieve()
+
+    storm_creation = field_filter(details, "best_track_index", 1)
+    storm_landfall = field_filter(details, "land", 1)
+
     basics.to_csv("storm_basics.csv", index=False)
     details.to_csv("storm_details.csv", index=False)
+    storm_creation.to_csv("storm_creation.csv", index=False)
+    storm_landfall.to_csv("storm_landfall.csv", index=False)
+
