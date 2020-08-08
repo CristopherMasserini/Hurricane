@@ -11,4 +11,4 @@ cleaning of the data to put it in the proper format for a dashboard and visualiz
 This file is for creating the visualization of the storm data processed in the data_processing.py file.
 These visualizations are designed to be used either with the dashboard of independently.
 
-The file uses the plotly library for the geo-plotting. This may require additional installation.
+This uses geopandas and descartes which may need additional installation.
